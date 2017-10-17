@@ -236,4 +236,85 @@ devServer: {
 ```
 
 ### Form and encapsulation  
-* 
+* implement battle component, with the function to update state; `handleSubmit(id, name)`, and pass down to child component via `onSubmit` props  
+```js
+{!!this.state.user1.name ||
+  <UserInput 
+    label={"User 1"} 
+    id="user1" 
+    onSubmit={this.handleSubmit} 
+  />
+}
+``` 
+
+* create `UserInput` child component  
+~> initial state `username` in constructor  
+~> set event handler `onChange` to `this.handleChange` and update username state  
+~> set event handler `onSubmit` to `this.handleSubmit` and call `this.props.onSubmit`, then pass in the `id` and `username` state as argument  
+```js
+//UserInput render()  
+<form onSubmit={this.handleSubmit}>
+  <label htmlFor="username">{this.props.label}</label>
+  <input 
+    id="username"
+    type="text" 
+    placeholder="github usename" 
+    autoComplete="off" 
+    value={this.state.username}
+    onChange={this.handleChange} 
+  />
+  <button 
+    disabled={!this.state.username} type="submit" 
+    className="btn btn-info">Submit</button>
+</form>
+```
+
+* build stateless function component `UserPreview` when submit input  
+~> pass `image` and `username` props from `Battle`  
+~> set reset from parent, check for id to reset component   
+~> pass reset function as prop from parent  
+```js
+//Parent Battle component  
+constructor() {
+  //...
+  //bound context to be able to always point context to class when callback in child
+  this.handleReset = this.handleReset.bind(this);
+}
+
+handleReset(id) {
+  this.setState({
+    [id]: {
+      image: null,
+      name: ''
+    }
+  });
+}
+
+//render
+<UserPreview 
+  id="user2" 
+  avatar={user2.image} 
+  name={user2.name} 
+  onReset={this.handleReset} //pass as function in props
+/>
+
+//UserPreview child in render
+//bind null since this is already bound in class constructor
+<small 
+  className="btn btn-danger" 
+  //call back function bind with this=null and argument 
+  onClick={props.onReset.bind(null, props.id)}>
+  Reset
+</small>
+```
+
+### Querry params and build routes for /battle/result?params  
+* Since component is defined to render with `Route` use `match.url` from component props to get url from Route  
+~> specify object in `to` props inside `Link` from react-router-dom to pushState navigate url with `pathname` and querry with`search`    
+```js
+<Link 
+  to={{
+    pathname: `${match.url}/results`,
+    search: `?user1=${user1.name}&user2=${user2.name}`
+}}>
+```  
