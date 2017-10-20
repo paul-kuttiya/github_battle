@@ -308,7 +308,9 @@ handleReset(id) {
 </small>
 ```
 
-### Querry params and build routes for /battle/result?params  
+* build github api to call `battle(users_arr)` and display winner in `utils/api.js`  
+
+### build routes for /battle/result?params  
 * Since component is defined to render with `Route` use `match.url` from component props to get url from Route  
 ~> specify object in `to` props inside `Link` from react-router-dom to pushState navigate url with `pathname` and querry with`search`    
 ```js
@@ -318,3 +320,145 @@ handleReset(id) {
     search: `?user1=${user1.name}&user2=${user2.name}`
 }}>
 ```  
+~> include the route to render and component in `App`  
+```js
+<Route exact path="/battle/results" component={Result} />
+```
+
+~> create `Results` component  
+
+### Querry params  
+* install `query-string`  
+~> parse string to key: value params  
+
+* When using route and specify `path` and `component`, the specified component will have location props, which can access to pathname and search key value  
+```js
+<Route exact path="/battle/results" component={Results} />
+
+// props in Result component wrapped by Route  
+// Propsread-only
+  history: //{…},
+  location: //{…},
+  hash: "",
+  key: "qq4tnf",
+  pathname: "/battle/results",
+  search: "?user1=123&user2=poookzzz",
+  match: //{…}
+```  
+
+* set initial state in `Results` component `constructor`  
+```js
+//constructor
+this.state {
+  winner: null,
+  loser: null,
+  error: null,
+  loading: true
+}
+```
+
+* Implement `componentDidMount()` in `Results` component  
+~> get users name from query string  
+~> call github api `api.battle` and pass users array from query string, then call `.then` and update state    
+~> call `then` after `api.battle` return promise and check for null. if promise return null, setState `error` and `loading` to false in state  
+~> If promise is truthy, setState `error` to null, and set loading to false, set winner and loser.
+
+* implement `render` in `Results` component  
+~> check loading state, if true return `loading JSX`  
+~> check error state, if true return `error JSX`  
+~> return `User` JSX  
+```js
+const error = this.state.error,
+      winner = this.state.winner,
+      loser = this.state.loser,
+      loading = this.state.loading;
+
+if (!!loading) {
+  return <h1>Loading...</h1>
+}
+
+if (!!error) {
+  return (
+    <div>
+      <p>{error}</p>
+      <Link path="/battle" className="btn btn-danger">Reset</Link>
+    </div>
+  )
+}
+
+//check with JSON if API returns JSON back correctly   
+return (
+  <div>
+    {JSON.stringify(this.state, null, 2)}
+  </div>
+)
+```
+
+* `User` component  
+~> return UI  
+```js
+return (
+  <div className="battle">
+    <User 
+      label="Winner" 
+      score={winner.score} 
+      profile={winner.profile}
+    />
+
+    <User 
+      label="Loser" 
+      score={loser.score} 
+      profile={loser.profile}
+    />
+  </div>
+)  
+```
+
+~> create `User` component  
+```js
+const User = (props) => {
+  return (
+    <div>
+      <h1>{props.label}</h1>
+      <h3 className="inline-center">Scores: {props.score}</h3>
+    </div>
+  )
+}
+```
+
+~> verify with `prop-types`  
+
+* Reuse component with `props.children`  
+~> `{props.children}` specified inside component `render()` method will look for html/jsx in `<component>...</component>` when specified and render as `props.children`  
+~> pull `UserPreview` into module  
+~> refactor `button` to `props.children`, then use `<UserPreview>...button<UserPreview>` component  
+```js
+//Battle component  
+<UserPreview>
+  <small 
+    className="btn btn-danger" 
+    onClick={this.handleReset.bind(null, "user1")}>
+      Reset
+  </small>
+</UserPreview>
+```
+
+~> create `Profile` component return `<UserPreview>..</UserPreview>` within, passing require props `avatar` and `name`, and then pass in `<ul>...</ul>` as `props.children` for `<UserPreview>`  
+```js
+const Profile = (props) => {
+  return(
+    <UserPreview avatar={info.avatar_url} name={info.login} >
+      <ul>
+        {info.name && <li>{info.name}</li>}
+        {info.location && <li>{info.location}</li>}
+        {info.company && <li>{info.company}</li>}
+        <li>Following: {info.following}</li>
+        <li>Followers: {info.followers}</li>
+        <li>Public Repos: {info.public_repos}</li>             
+        {info.blog && <li><a href={info.blog}>{info.blog}</a></li>}        
+      </ul>
+    </UserPreview>
+  )
+}
+```
+~> render `Profile` component in `User` component   

@@ -1,17 +1,18 @@
 {
-  "name": "webpack_app",
+  "name": "github-battle",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npm run clean && webpack",
     "clean": "rimraf public",
-    "start": "webpack-dev-server --watch --open"
+    "start": "webpack-dev-server --watch --open",
+    "build": "SET NODE_ENV=production && webpack -p"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.16.2",
+    "query-string": "^4.3.4",
     "prop-types": "^15.6.0",
     "react": "15.4.1",
     "react-dom": "15.4.1",
@@ -25,7 +26,6 @@
     "bootstrap-loader": "^2.2.0",
     "bootstrap-sass": "^3.3.7",
     "css-loader": "^0.26.1",
-    "express": "^4.16.1",
     "extract-text-webpack-plugin": "^2.0.0-beta.4",
     "file-loader": "^1.1.5",
     "html-webpack-plugin": "^2.30.1",
@@ -39,8 +39,6 @@
     "style-loader": "^0.13.1",
     "url-loader": "^0.6.2",
     "webpack": "2.2.0-rc.0",
-    "webpack-dev-middleware": "^1.12.0",
-    "webpack-dev-server": "^2.2.0-rc.0",
-    "webpack-hot-middleware": "^2.19.1"
+    "webpack-dev-server": "^2.2.0-rc.0"
   }
 }

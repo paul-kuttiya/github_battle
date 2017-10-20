@@ -1,28 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-
-const UserPreview = (props) => {
-  return (
-    <div className="column">
-      <label>{props.id}</label>
-      <img src={props.avatar} />
-      <h2>@{props.name}</h2>
-      <small 
-        className="btn btn-danger" 
-        onClick={props.onReset.bind(null, props.id)}>
-        Reset
-      </small>
-    </div>
-  )
-}
-
-UserPreview.propTypes = {
-  id: PropTypes.string.isRequired,
-  avatar: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  onReset: PropTypes.func.isRequired
-}
+import UserPreview from './UserPreview';
 
 class UserInput extends React.Component {
   constructor() {
@@ -137,8 +116,13 @@ class Battle extends React.Component {
               id="user1" 
               avatar={user1.image} 
               name={user1.name} 
-              onReset={this.handleReset} 
-            />
+            >
+              <small 
+                className="btn btn-danger" 
+                onClick={this.handleReset.bind(null, "user1")}>
+                  Reset
+              </small>
+            </UserPreview>
           }
 
           {!!user2.name ||
@@ -154,8 +138,13 @@ class Battle extends React.Component {
               id="user2" 
               avatar={user2.image} 
               name={user2.name} 
-              onReset={this.handleReset} 
-            />
+            >
+              <small 
+                className="btn btn-danger" 
+                onClick={this.handleReset.bind(null, "user2")}>
+                  Reset
+              </small>
+            </UserPreview>
           }
         </div>
         { (!!user1.image && 

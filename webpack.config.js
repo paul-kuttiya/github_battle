@@ -11,7 +11,7 @@ const VENDOR_LIB = [
   "react", "react-router-dom", "react-dom"
 ];
 
-module.exports = {
+const config = {
   performance: {
     hints: false
   },
@@ -72,3 +72,16 @@ module.exports = {
     })
   ]
 };
+
+module.exports = config;
+
+if (process.env.NODE_ENV === 'production') {
+  config.plugins.push(
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+      }
+    }),
+    new webpack.optimize.UglifyJsPlugin()
+  )
+}
