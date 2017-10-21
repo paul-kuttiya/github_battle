@@ -429,7 +429,7 @@ const User = (props) => {
 ~> verify with `prop-types`  
 
 * Reuse component with `props.children`  
-~> `{props.children}` specified inside component `render()` method will look for html/jsx in `<component>...</component>` when specified and render as `props.children`  
+~> `{props.children}` specified inside component `render()` method will look for html/jsx in `<component>...</component>` when specified and render as `props.children`; similar to `yeild` in ROR    
 ~> pull `UserPreview` into module  
 ~> refactor `button` to `props.children`, then use `<UserPreview>...button<UserPreview>` component  
 ```js
@@ -461,4 +461,52 @@ const Profile = (props) => {
   )
 }
 ```
-~> render `Profile` component in `User` component   
+~> render `Profile` component inside `User` component   
+
+### Reusable component and props.default  
+* create `Loading` compoent  
+~> set state to be `props.text` in `constructor()`  
+~> set `defaultProps` for defult  
+~> render in `render`  
+
+```js
+//Loading component
+Loading.defaultProps = {
+  text: 'Loading',
+  className: 'inline-center'
+}
+```
+
+* add `...` while loading to Loading text  
+~> in `componentDidMount` check if text state === 'Loading...'  
+~> if true return the default props  
+~> else return the `prevState` for text and + .  
+```js
+componentDidMount() {
+  const done = `${this.props.text}...`;
+
+  this.interval = window.setInterval(() => {
+    if (this.state.text === done) {
+      this.setState(() => {
+        return {
+          text: this.props.text
+        }
+      });
+    } else {
+      this.setState((prevState, props) => {
+        return {
+          text: `${prevState.text}.`
+        };
+      });
+    }
+  }, this.props.speed);
+}
+```
+
+~> the `this.interval` inside `componentDidMount` will recurring while visiting, hence need to remove the listener when component `Loading` unmount  
+```js
+//Loading component  
+componentWillUnMount() {
+  window.clearInterval(this.interval);
+}
+```

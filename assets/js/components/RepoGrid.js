@@ -1,13 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export const Loading = () => {
-  return (
-    <p>Now Loading!</p>
-  )
-}
-
-export const RepoGrid = (props) => {
+const RepoGrid = (props) => {
   return (
     <ul className="popular-list">
       {props.repos.map((repo, i) => {
@@ -32,3 +26,5 @@ export const RepoGrid = (props) => {
 RepoGrid.propTypes = {
   repos: PropTypes.array.isRequired
 }
+
+export default RepoGrid;

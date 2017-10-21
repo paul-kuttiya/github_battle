@@ -1,7 +1,8 @@
 import React from 'react';
-import SelectLanguage from './SelectLanguage';
-import { Loading, RepoGrid } from './RepoGrid';
 import api from '../utils/api';
+import SelectLanguage from './SelectLanguage';
+import RepoGrid from './RepoGrid';
+import Loading from './Loading';
 
 class Popular extends React.Component {
   constructor() {
