@@ -51,9 +51,11 @@ const githubAPI = {
 
     let [winner, loser] = (a.score > b.score ? [a, b] : [b, a]);
     
-    if (a.score === b.score) { [winner, loser] = [null, null] };
-
-    return { winner, loser };
+    if (a.score === b.score) {
+      return { winner, loser, draw: true };
+    }
+     
+    return { winner, loser, draw: false };
   },
   battle(players) {
     const API_arrays = players.map(player => this.getUserData(player));

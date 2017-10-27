@@ -69,7 +69,8 @@ class Results extends React.Component {
           this.setState({
             loading: false,
             winner: results.winner,
-            loser: results.loser
+            loser: results.loser,
+            draw: results.draw
           });
        });
   }
@@ -79,6 +80,8 @@ class Results extends React.Component {
           winner = this.state.winner,
           loser = this.state.loser,
           loading = this.state.loading;
+
+    const draw = !!this.state.draw && "Draw";
 
     if (!!loading) {
       return <Loading />
@@ -96,13 +99,13 @@ class Results extends React.Component {
     return (
       <div className="battle">
         <User 
-          label="Winner" 
+          label={draw || "Winner"} 
           score={winner.score} 
           profile={winner.profile}
         />
 
         <User 
-          label="Loser" 
+          label={draw || "Loser"} 
           score={loser.score} 
           profile={loser.profile}
         />
