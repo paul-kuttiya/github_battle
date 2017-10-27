@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "rimraf public",
     "start": "webpack-dev-server --watch --open",
-    "build": "SET NODE_ENV=production && webpack -p",
+    "build": "npm run clean && SET NODE_ENV=production && webpack -p",
     "deploy": "npm run build && firebase deploy",
     "firebase-init": "firebase login && firebase init"
   },
